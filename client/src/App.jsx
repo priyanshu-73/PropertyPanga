@@ -6,6 +6,7 @@ import SignUp from "./Pages/SignUp";
 import About from "./Pages/About";
 import Profile from "./Pages/Profile";
 import Header from "./components/Header";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
+      <Toaster position="bottom-center" />
     </BrowserRouter>
   );
 };
