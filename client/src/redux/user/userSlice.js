@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 const initialState = {
   currentUser: null,
@@ -17,6 +18,7 @@ const userSlice = createSlice({
       state.currentUser = action.payload;
       state.loading = false;
       state.error = null;
+      toast.success("Logged in Successfully!");
     },
     signInFailure: (state, action) => {
       state.error = action.payload;
