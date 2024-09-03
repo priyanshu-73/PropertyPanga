@@ -1,9 +1,10 @@
-import express, { urlencoded } from "express";
-import dotenv from "dotenv";
-import connectDb from "./config/connectDb.js";
-import userRouter from "./routes/user.route.js";
-import authRouter from "./routes/auth.route.js";
 import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
+import cookieParser from "cookie-parser";
+import connectDb from "./config/connectDb.js";
+import authRouter from "./routes/auth.route.js";
+import userRouter from "./routes/user.route.js";
 
 dotenv.config();
 const app = express();
@@ -12,6 +13,7 @@ connectDb(process.env.MONGO_URI);
 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 
