@@ -7,16 +7,20 @@ import {
 } from "firebase/storage";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { app } from "../firebase";
 import {
+  deleteUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
 } from "../redux/user/userSlice";
-import toast from "react-hot-toast";
 
 const Profile = () => {
   const fileRef = useRef(null);
+  const navigate = useNavigate();
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
@@ -81,6 +85,30 @@ const Profile = () => {
     } catch (error) {
       dispatch(updateUserFailure(error.message));
       console.log(error);
+    }
+  };
+  const handleDelete = async (e) => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await axios.delete(
+        `/api/user/delete/${currentUser.rest._id}`,
+        {
+          headers: {
+            Authorization: `Bearer YOUR_ACCESS_TOKEN`, // Include this if your API requires authentication
+          },
+        }
+      );
+
+      const data = res.data;
+      if (data === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+      navigate("/sign-in");
+    } catch (error) {
+      console.log(error);
+      dispatch(deleteUserFailure(error.message));
     }
   };
   return (
@@ -157,7 +185,10 @@ const Profile = () => {
         </button>
       </form>
       <div className="flex justify-between mt-5">
-        <span className="text-red-700 cursor-pointer hover:opacity-95">
+        <span
+          onClick={handleDelete}
+          className="text-red-700 cursor-pointer hover:opacity-95"
+        >
           Delete Account
         </span>
         <span className="text-red-700 cursor-pointer hover:opacity-95">

@@ -28,7 +28,6 @@ const userSlice = createSlice({
       state.loading = true;
     },
     updateUserSuccess: (state, action) => {
-      console.log("Payload received:", action.payload); // Debugging line
       state.currentUser = action.payload;
       state.loading = false;
       state.error = null;
@@ -38,6 +37,20 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
       toast.error("User updation failed!");
+    },
+    deleteUserStart: (state) => {
+      state.loading = true;
+    },
+    deleteUserSuccess: (state, action) => {
+      state.currentUser = null;
+      state.loading = false;
+      state.error = null;
+      toast.success("User deleted successful!y");
+    },
+    deleteUserFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+      toast.error("User Deletion Failed!");
     },
   },
 });
@@ -49,6 +62,9 @@ export const {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;
