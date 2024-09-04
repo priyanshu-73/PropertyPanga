@@ -1,20 +1,29 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import axios from "axios";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { app } from "../firebase";
+import {
+  updateUserFailure,
+  updateUserStart,
+  updateUserSuccess,
+} from "../redux/user/userSlice";
+import toast from "react-hot-toast";
 
 const Profile = () => {
   const fileRef = useRef(null);
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (file) {
@@ -46,10 +55,38 @@ const Profile = () => {
       }
     );
   };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      const res = await axios.post(
+        `/api/user/update/${currentUser.rest._id}`,
+        formData,
+        {
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      );
+      const data = res.data;
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      console.log(currentUser);
+      dispatch(updateUserSuccess(data));
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
+      console.log(error);
+    }
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
-      <form className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           onChange={(e) => setFile(e.target.files[0])}
           type="file"
@@ -59,7 +96,11 @@ const Profile = () => {
         />
         <img
           onClick={() => fileRef.current.click()}
-          src={formData.avatar || currentUser.rest.avatar}
+          src={
+            formData.avatar || (currentUser.rest && currentUser.rest.avatar)
+              ? currentUser.rest.avatar
+              : ""
+          }
           alt="profile"
           className="h-24 rounded-full w-24 object-cover cursor-pointer self-center mt-2"
         />
@@ -80,23 +121,39 @@ const Profile = () => {
         <input
           type="text"
           placeholder="username"
+          defaultValue={
+            currentUser.rest && currentUser.rest.avatar
+              ? currentUser.rest.username
+              : ""
+          }
           className="border p-3 rounded-lg"
           id="username"
+          onChange={handleChange}
         />
         <input
           type="email"
           placeholder="email"
+          defaultValue={
+            currentUser.rest && currentUser.rest.avatar
+              ? currentUser.rest.email
+              : ""
+          }
           className="border p-3 rounded-lg"
           id="email"
+          onChange={handleChange}
         />
         <input
           type="password"
           placeholder="password"
           className="border p-3 rounded-lg"
           id="password"
+          onChange={handleChange}
         />
-        <button className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
-          update
+        <button
+          disabled={loading}
+          className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80"
+        >
+          {loading ? "Loading..." : "update"}
         </button>
       </form>
       <div className="flex justify-between mt-5">
@@ -112,3 +169,4 @@ const Profile = () => {
 };
 
 export default Profile;
+1;

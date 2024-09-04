@@ -34,7 +34,8 @@ const Header = () => {
             </li>
           </Link>
           <Link to={currentUser ? "/profile" : "/sign-in"}>
-            {currentUser ? (
+            {console.log(currentUser)}
+            {currentUser && currentUser.rest ? (
               <img
                 className="rounded-full h-7 object-cover"
                 src={currentUser.rest.avatar}
