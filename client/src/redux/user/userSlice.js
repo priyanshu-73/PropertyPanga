@@ -52,6 +52,20 @@ const userSlice = createSlice({
       state.loading = false;
       toast.error("User Deletion Failed!");
     },
+    signOutStart: (state) => {
+      state.loading = true;
+    },
+    signOutSuccess: (state, action) => {
+      state.currentUser = null;
+      state.loading = false;
+      state.error = null;
+      toast.success("Logged Out!");
+    },
+    signOutFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+      toast.error("Logged Out Failed!");
+    },
   },
 });
 
@@ -65,6 +79,9 @@ export const {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signOutStart,
+  signOutSuccess,
+  signOutFailure,
 } = userSlice.actions;
 
 export default userSlice.reducer;

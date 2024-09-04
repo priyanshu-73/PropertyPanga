@@ -13,6 +13,9 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
+  signOutFailure,
+  signOutStart,
+  signOutSuccess,
   updateUserFailure,
   updateUserStart,
   updateUserSuccess,
@@ -87,7 +90,7 @@ const Profile = () => {
       console.log(error);
     }
   };
-  const handleDelete = async (e) => {
+  const handleDelete = async () => {
     try {
       dispatch(deleteUserStart());
       const res = await axios.delete(
@@ -109,6 +112,22 @@ const Profile = () => {
     } catch (error) {
       console.log(error);
       dispatch(deleteUserFailure(error.message));
+    }
+  };
+  const handleSignOut = async () => {
+    dispatch(signOutStart());
+    try {
+      const res = await axios.get("/api/auth/signout");
+      const data = res.data;
+      if (data === false) {
+        dispatch(signOutFailure(data.message));
+        return;
+      }
+
+      dispatch(signOutSuccess(data));
+      navigate("/sign-in");
+    } catch (error) {
+      dispatch(signOutFailure(error.message));
     }
   };
   return (
@@ -191,7 +210,10 @@ const Profile = () => {
         >
           Delete Account
         </span>
-        <span className="text-red-700 cursor-pointer hover:opacity-95">
+        <span
+          onClick={handleSignOut}
+          className="text-red-700 cursor-pointer hover:opacity-95"
+        >
           Sign Out
         </span>
       </div>
