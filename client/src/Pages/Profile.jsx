@@ -20,6 +20,7 @@ import {
   updateUserStart,
   updateUserSuccess,
 } from "../redux/user/userSlice";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const fileRef = useRef(null);
@@ -143,11 +144,7 @@ const Profile = () => {
         />
         <img
           onClick={() => fileRef.current.click()}
-          src={
-            formData.avatar || (currentUser.rest && currentUser.rest.avatar)
-              ? currentUser.rest.avatar
-              : ""
-          }
+          src={formData.avatar || currentUser.rest.avatar}
           alt="profile"
           className="h-24 rounded-full w-24 object-cover cursor-pointer self-center mt-2"
         />
@@ -202,6 +199,12 @@ const Profile = () => {
         >
           {loading ? "Loading..." : "update"}
         </button>
+        <Link
+          className="rounded-lg bg-green-700 text-white p-3 uppercase text-center hover:opacity-95"
+          to={"/create-listing"}
+        >
+          create listing
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span

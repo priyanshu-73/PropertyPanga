@@ -37,7 +37,7 @@ const Header = () => {
             {console.log(currentUser)}
             {currentUser && currentUser.rest ? (
               <img
-                className="rounded-full h-7 object-cover"
+                className="rounded-full h-7 w-7 object-cover"
                 src={currentUser.rest.avatar}
                 alt="profile"
               />
