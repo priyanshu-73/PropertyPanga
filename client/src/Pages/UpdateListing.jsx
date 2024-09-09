@@ -153,7 +153,7 @@ const CreateListing = () => {
         setLoading(false);
       }
       console.log(data);
-      navigate(`/lsiting/${data._id}`);
+      navigate(`/listing/${data._id}`);
       toast.success("Listing has been updated successfully!");
     } catch (error) {
       setError(error.message);
