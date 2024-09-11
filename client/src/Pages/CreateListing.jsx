@@ -34,7 +34,6 @@ const CreateListing = () => {
   const [imageUploadError, setImageUploadError] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(formData);
   const handleImageSUbmit = (e) => {
     if (files.length > 0 && files.length + formData.imageURLs.length < 7) {
       setUploading(true);
@@ -133,7 +132,6 @@ const CreateListing = () => {
         toast.error(data.message);
         setLoading(false);
       }
-      console.log(data);
       navigate(`/lsiting/${data._id}`);
       toast.success("Listing has been created successfully!");
     } catch (error) {
