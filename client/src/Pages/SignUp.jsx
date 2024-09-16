@@ -34,7 +34,6 @@ const SignUp = () => {
       setIsLoading(false);
       setError(null);
       navigate("/sign-in");
-      console.log(data);
       setFormData({ username: "", email: "", password: "" });
       toast.success("Signed Up Successfully");
     } catch (error) {
