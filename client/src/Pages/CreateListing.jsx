@@ -132,7 +132,7 @@ const CreateListing = () => {
         toast.error(data.message);
         setLoading(false);
       }
-      navigate(`/lsiting/${data._id}`);
+      navigate(`/listing/${data._id}`);
       toast.success("Listing has been created successfully!");
     } catch (error) {
       setError(error.message);
